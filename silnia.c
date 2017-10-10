@@ -12,7 +12,7 @@ uli silnia(int n) {
 	return s;
 }
 
-int main() {
+int main(int argc, char *argv[]) {
 	int n;
 	printf("Podaj liczbe: ");
 	scanf("%d", &n);

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main () {
+int main (int argc, char *argv[]) {
 	int rok;
 	printf("Podaj rok urodzenia: ");
 	scanf("%d", &rok);
