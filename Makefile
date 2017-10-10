@@ -12,11 +12,11 @@ CFLAGS ?= $(CWARNINGS) -std=c90
 CXXFLAGS ?= $(WARNINGS) -std=c++98
 DEPFLAGS ?= 
 
-SRC := main.c
+SRC ?= main.c
 EXE := $(basename $(firstword $(SRC)))
 SRCDIR ?= .
-OBJDIR := .objdir
-DEPDIR := .depdir
+OBJDIR ?= .objdir
+DEPDIR ?= .depdir
 
 OBJ := $(addprefix $(OBJDIR)/, \
 	$(addsuffix .o, $(SRC)) \
@@ -87,9 +87,7 @@ $(DEPDIR)/%.cpp.d: $(SRCDIR)/%.cpp
 	sed -i 's,^\([^:]\+.o\):,\1 $$(DEPDIR)/$*.c.d:,' $@
 
 # include dependencies
-ifneq ($(MAKECMDGOALS),clean)
 -include $(wildcard $(DEP))
-endif
 
 # depend on directory
 $(OBJ): | $(OBJDIR)/.keepme
@@ -97,12 +95,12 @@ $(DEP): | $(DEPDIR)/.keepme
 
 # create directory
 $(OBJDIR)/.keepme:
-	$(MKDIR) $(OBJDIR)
+	-$(MKDIR) $(OBJDIR)
 	touch $@
 
 # create directory
 $(DEPDIR)/.keepme:
-	$(MKDIR) $(DEPDIR)
+	-$(MKDIR) $(DEPDIR)
 	touch $@
 
 # delete stuff
