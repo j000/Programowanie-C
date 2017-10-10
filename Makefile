@@ -2,14 +2,38 @@ SHELL := /bin/sh
 MKDIR ?= mkdir
 RMDIR ?= rmdir
 
-WARNINGS := \
-	-Wall -pedantic \
-	-Wshadow -Wpointer-arith -Wcast-qual -Wextra
+# enable a lot of warnings and then some more
+WARNINGS := -Wall -Wextra
+# shadowing variables, are you sure?
+WARNINGS += -Wshadow
+# sizeof(void)
+WARNINGS += -Wpointer-arith
+# unsafe pointer cast qualifiers: `const char*` is cast to `char*`
+WARNINGS += -Wcast-qual
 
-CWARNINGS := $(WARNINGS) -Wmissing-prototypes -Wstrict-prototypes
+# be more strict
+# welcome to 2012
+# -Wpedantic is available since gcc 4.8
+ifeq ($(shell $(CC) -dumpversion),4.7)
+	WARNINGS += -pedantic
+else
+	WARNINGS += -Wpedantic
+endif
 
+# functions should be declared
+WARNINGS += -Wmissing-declarations
+
+# C-specific warnings
+CWARNINGS := $(WARNINGS)
+# warn about fn() instead of fn(void)
+CWARNINGS += -Wstrict-prototypes
+# this probably should be enabled only in bigger projects
+#CWARNINGS += -Wmissing-prototypes
+
+# old standards (ANSI C, ANSI C++)
 CFLAGS ?= $(CWARNINGS) -std=c90
 CXXFLAGS ?= $(WARNINGS) -std=c++98
+# for future use if needed
 DEPFLAGS ?= 
 
 SRC ?= main.c
@@ -35,25 +59,14 @@ endif
 .PHONY: all
 all: $(EXE) ## build executable
 
-.PHONY: help
-help: ## show this help
-	@# print all lines with descriptions but not that line
-	@awk -F':.*##' '/: [^#]*##/{ printf("%12s: %s\n", $$1, $$2)}' $(MAKEFILE_LIST)
-
-.PHONY: debug
-#debug: CFLAGS += -D_DEBUG -g
-#debug: CXXFLAGS += -D_DEBUG -g
-debug: CFLAGS := $(filter-out -O2,$(CFLAGS)) -D_DEBUG -g
-debug: CXXFLAGS := $(filter-out -O2,$(CXXFLAGS)) -D_DEBUG -g
-debug: $(EXE) ## build with debug enabled
-
-.PHONY: print-%
-print-%:
-	@echo '$*=$($*)'
-
 .PHONY: run
 run: $(EXE) ## run program
 	@./$(EXE)
+
+.PHONY: debug
+debug: CFLAGS := $(filter-out -O2,$(CFLAGS)) -D_DEBUG -g
+debug: CXXFLAGS := $(filter-out -O2,$(CXXFLAGS)) -D_DEBUG -g
+debug: $(EXE) ## build with debug enabled
 
 .PHONY: debugrun
 debugrun: debug run ## run debug version
@@ -62,27 +75,21 @@ $(EXE): $(OBJ)
 	echo "Link $^ -> $@"
 	$(CC) $(LDFLAGS) -o $@ $(OBJ)
 
-#$(OBJDIR)/%.c.o: $(SRCDIR)/%.c
-#	echo "Compile $< -> $@"
-#	$(CC) $(CFLAGS) -c -o $@ $<
 $(OBJDIR)/%.c.o: $(DEPDIR)/%.c.d
-	echo "Compile $(SRCDIR)/$*.c -> $@"
+	echo "Compile $(SRCDIR)/$*.c -> $(OBJDIR)/$*.c.o"
 	$(CC) $(CFLAGS) -c -o $@ $*.c
 
-#$(OBJDIR)/%.cpp.o: $(SRCDIR)/%.cpp
-#	echo "Compile $< -> $@"
-#	$(CXX) $(CXXFLAGS) -c -o $@ $<
 $(OBJDIR)/%.cpp.o: $(DEPDIR)/%.cpp.d
-	echo "Compile $(SRCDIR)/$*.cpp -> $@"
+	echo "Compile $(SRCDIR)/$*.cpp -> $(OBJDIR)/$*.cpp.o"
 	$(CXX) $(CXXFLAGS) -c -o $@ $*.cpp
 
 $(DEPDIR)/%.c.d: $(SRCDIR)/%.c
-	echo "Dependencies $(SRCDIR)/$< -> $@"
+	echo "Dependencies $(SRCDIR)/$*.c -> $(DEPDIR)/$*.c.d"
 	$(CC) $(DEPFLAGS) -MM -MT '$$(OBJDIR)/$*.c.o' -MF $@ $<
 	sed -i 's,^\([^:]\+.o\):,\1 $$(DEPDIR)/$*.c.d:,' $@
 
 $(DEPDIR)/%.cpp.d: $(SRCDIR)/%.cpp
-	echo "Dependencies $(SRCDIR)/$< -> $@"
+	echo "Dependencies $(SRCDIR)/$*.cpp -> $(DEPDIR)/$*.cpp.d"
 	$(CXX) $(DEPFLAGS) -MM -MT '$$(OBJDIR)/$*.cpp.o' -o $*.o -MF $@ $<
 	sed -i 's,^\([^:]\+.o\):,\1 $$(DEPDIR)/$*.c.d:,' $@
 
@@ -104,6 +111,10 @@ $(DEPDIR)/.keepme:
 	touch $@
 
 # delete stuff
+.PHONY: clean
+clean: mostlyclean ## delete everything this Makefile created
+	-$(RM) $(EXE)
+
 .PHONY: mostlyclean
 mostlyclean: ## delete everything created, leave executable
 	echo "Cleaning"
@@ -112,14 +123,23 @@ ifneq ($(wildcard $(OBJDIR)),)
 	-$(RM) $(OBJDIR)/.keepme
 	-$(RMDIR) $(OBJDIR)
 endif
-
 ifneq ($(wildcard $(DEPDIR)),)
 	-$(RM) $(DEP)
 	-$(RM) $(DEPDIR)/.keepme
 	-$(RMDIR) $(DEPDIR)
 endif
 
-.PHONY: clean
-clean: mostlyclean ## delete everything this Makefile created
-	-$(RM) $(EXE)
+.PHONY: forceclean
+forceclean: ## force delete all created temporary folders
+	echo "Force cleaning"
+ifneq ($(wildcard $(OBJDIR)),)
+	-$(RM) -r $(OBJDIR)
+endif
+ifneq ($(wildcard $(DEPDIR)),)
+	-$(RM) -r $(DEPDIR)
+endif
+
+.PHONY: help
+help: ## show this help
+	@awk -F':.*##' '/: [^#]*##/{ printf("%12s: %s\n", $$1, $$2)}' $(MAKEFILE_LIST)
 
