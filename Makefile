@@ -3,7 +3,7 @@ MKDIR ?= mkdir
 RMDIR ?= rmdir
 
 WARNINGS := \
-	-Wall -Wpedantic \
+	-Wall -pedantic \
 	-Wshadow -Wpointer-arith -Wcast-qual -Wextra
 
 CWARNINGS := $(WARNINGS) -Wmissing-prototypes -Wstrict-prototypes
