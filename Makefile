@@ -12,8 +12,8 @@ CFLAGS ?= $(CWARNINGS) -std=c90
 CXXFLAGS ?= $(WARNINGS) -std=c++98
 DEPFLAGS ?= 
 
-EXE := main
 _SRC := main.c
+EXE := $(basename $(firstword $(_SRC)))
 SRCDIR ?= .
 OBJDIR := .objdir
 DEPDIR := .depdir
