@@ -12,24 +12,18 @@ CFLAGS ?= $(CWARNINGS) -std=c90
 CXXFLAGS ?= $(WARNINGS) -std=c++98
 DEPFLAGS ?= 
 
-_SRC := main.c
-EXE := $(basename $(firstword $(_SRC)))
+SRC := main.c
+EXE := $(basename $(firstword $(SRC)))
 SRCDIR ?= .
 OBJDIR := .objdir
 DEPDIR := .depdir
 
-SRC := $(addprefix $(SRCDIR)/, $(_SRC))
-
-# OBJ := $(addprefix $(OBJDIR)/, \
-# 	$(addsuffix .o, $(filter %.c,$(_SRC))) \
-# 	$(addsuffix .o, $(filter %.cpp,$(_SRC))) \
-# )
 OBJ := $(addprefix $(OBJDIR)/, \
-	$(addsuffix .o, $(_SRC)) \
+	$(addsuffix .o, $(SRC)) \
 )
 
 DEP := $(addprefix $(DEPDIR)/, \
-	$(addsuffix .d, $(_SRC)) \
+	$(addsuffix .d, $(SRC)) \
 )
 
 # be silent unless VERBOSE
