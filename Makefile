@@ -98,7 +98,7 @@ $(DEPDIR)/%.c.d: $(SRCDIR)/%.c
 
 $(DEPDIR)/%.cpp.d: $(SRCDIR)/%.cpp
 	echo "Dependencies $(SRCDIR)/$*.cpp -> $(DEPDIR)/$*.cpp.d"
-	$(CXX) $(DEPFLAGS) -MM -MT '$$(OBJDIR)/$*.cpp.o' -o $*.o -MF $@ $<
+	$(CXX) $(DEPFLAGS) -MM -MT '$$(OBJDIR)/$*.cpp.o' -MF $@ $<
 	sed -i 's,^\([^:]\+.o\):,\1 $$(DEPDIR)/$*.c.d:,' $@
 
 # include dependencies
