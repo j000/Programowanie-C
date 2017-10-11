@@ -33,8 +33,8 @@ CWARNINGS += -Wstrict-prototypes
 #CWARNINGS += -Wmissing-prototypes
 
 # old standards (ANSI C, ANSI C++)
-CFLAGS ?= $(CWARNINGS) -std=c90
-CXXFLAGS ?= $(WARNINGS) -std=c++98
+CFLAGS ?= $(CWARNINGS) -std=c90 -O2
+CXXFLAGS ?= $(WARNINGS) -std=c++98 -O2
 # for future use if needed
 DEPFLAGS ?= 
 
