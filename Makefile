@@ -37,6 +37,12 @@ CFLAGS ?= $(CWARNINGS) -std=c90 -O2
 CXXFLAGS ?= $(WARNINGS) -std=c++98 -O2
 # for future use if needed
 DEPFLAGS ?= 
+LDFLAGS ?= 
+
+# add unicode
+CFLAGS += $(shell pkg-config --cflags-only-I icu-uc icu-io)
+CXXFLAGS += $(shell pkg-config --cflags-only-I icu-uc icu-io)
+LDFLAGS += $(shell pkg-config --libs-only-l --libs-only-L icu-uc icu-io)
 
 SRC ?= main.c
 EXE := $(basename $(firstword $(SRC)))
