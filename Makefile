@@ -10,6 +10,8 @@ WARNINGS += -Wshadow
 WARNINGS += -Wpointer-arith
 # unsafe pointer cast qualifiers: `const char*` is cast to `char*`
 WARNINGS += -Wcast-qual
+# most of the time you don't want this
+WARNINGS += -Werror=implicit-function-declaration
 
 # be more strict
 # welcome to 2012
