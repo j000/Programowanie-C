@@ -3,6 +3,12 @@
 
 typedef unsigned long int uli;
 
+/**
+ * liczy slinie liczby
+ */
+uli silnia(int);
+
+
 uli silnia(int n) {
 	uli s=1;
 	int i;
@@ -19,3 +25,5 @@ int main(int argc, char *argv[]) {
 	printf("%d! = %lu\n", n, silnia(n));
 	return EXIT_SUCCESS;
 }
+
+/* vim: tabstop=4 shiftwidth=0 noexpandtab */
