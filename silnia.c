@@ -26,4 +26,5 @@ int main(int argc, char *argv[]) {
 	return EXIT_SUCCESS;
 }
 
-/* vim: tabstop=4 shiftwidth=0 noexpandtab */
+/* vim: tabstop=4 shiftwidth=0 noexpandtab
+*/
