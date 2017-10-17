@@ -37,7 +37,7 @@ CFLAGS ?= $(CWARNINGS) -std=c90 -O2
 CXXFLAGS ?= $(WARNINGS) -std=c++98 -O2
 # for future use if needed
 DEPFLAGS ?= 
-LDFLAGS ?= 
+LDFLAGS ?= -lm
 
 # add unicode
 CFLAGS += $(shell pkg-config --cflags-only-I icu-uc icu-io)
