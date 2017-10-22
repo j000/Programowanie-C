@@ -23,7 +23,7 @@ else
 endif
 
 # functions should be declared
-WARNINGS += -Wmissing-declarations
+#WARNINGS += -Wmissing-declarations
 
 # C-specific warnings
 CWARNINGS := $(WARNINGS)
