@@ -12,6 +12,8 @@ WARNINGS += -Wpointer-arith
 WARNINGS += -Wcast-qual
 # most of the time you don't want this
 WARNINGS += -Werror=implicit-function-declaration
+# let's stick with C89
+WARNINGS += -Werror=declaration-after-statement
 
 # be more strict
 # welcome to 2012
