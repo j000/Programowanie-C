@@ -12,8 +12,8 @@ int rownanieKwadratowe(double a, double b, double c, double* x1, double* x2) {
 		return 1;
 	}
 	delta = sqrt(delta);
-	*x1 = -b - delta / a / 2;
-	*x2 = -b + delta / a / 2;
+	*x1 = (-b - delta) / a / 2;
+	*x2 = (-b + delta) / a / 2;
 	return 2;
 }
 
