@@ -14,6 +14,8 @@ WARNINGS += -Wcast-qual
 WARNINGS += -Werror=implicit-function-declaration
 # let's stick with C89
 WARNINGS += -Werror=declaration-after-statement
+# why warning for comments inside comments
+WARNINGS += -Wno-comment
 
 # be more strict
 # welcome to 2012
