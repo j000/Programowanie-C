@@ -18,9 +18,9 @@ WARNINGS += -Werror=declaration-after-statement
 WARNINGS += -Wno-comment
 
 # be more strict
-# welcome to 2012
-# -Wpedantic is available since gcc 4.8
 ifeq ($(shell $(CC) -dumpversion),4.7)
+	# welcome to 2012
+	# -Wpedantic is available since gcc 4.8
 	WARNINGS += -pedantic
 else
 	WARNINGS += -Wpedantic
@@ -37,10 +37,10 @@ CWARNINGS += -Wstrict-prototypes
 #CWARNINGS += -Wmissing-prototypes
 
 # old standards (ANSI C, ANSI C++)
-CFLAGS ?= $(CWARNINGS) -std=c90 -O2
+CFLAGS ?= $(CWARNINGS) -std=c89 -O2
 CXXFLAGS ?= $(WARNINGS) -std=c++98 -O2
 # for future use if needed
-DEPFLAGS ?= 
+DEPFLAGS ?=
 LDFLAGS ?= -lm
 
 # add unicode
