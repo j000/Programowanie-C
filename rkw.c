@@ -2,8 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int rownanieKwadratowe(double a, double b, double c, double* x1, double* x2) {
+int rownanieKwadratowe(double a, double b, double c, double *x1, double *x2) {
 	double delta = b * b - 4 * a * c;
+
 	/* brak rozwiązań */
 	if (delta < 0) {
 		return 0;
@@ -19,9 +20,10 @@ int rownanieKwadratowe(double a, double b, double c, double* x1, double* x2) {
 	return 2;
 }
 
-int kwadratowe(int argc, char* argv[]) {
-	double a,b,c,x1,x2;
+int kwadratowe(int argc, char *argv[]) {
+	double a, b, c, x1, x2;
 	int n;
+
 	/* **** */
 	printf("Równanie kwadratowe a*x^2 + b*x + c\n");
 	printf("Podaj a: ");

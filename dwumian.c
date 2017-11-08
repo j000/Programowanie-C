@@ -8,40 +8,45 @@ typedef unsigned long int uli;
  * liczy slinie liczby
  */
 uli silnia(unsigned);
+
 /**
   * liczy symbol newtona
   */
-uli symbol_newtona(unsigned,unsigned);
+uli symbol_newtona(unsigned, unsigned);
+
 /**
   * liczy dwumian Newtona
   */
 double dwumian(double, double, unsigned);
 
 uli silnia(unsigned n) {
-	uli s=1;
+	uli s = 1;
 	unsigned i;
-	for (i=1; i<=n; ++i) {
-		s*=i;
+
+	for (i = 1; i <= n; ++i) {
+		s *= i;
 	}
 	return s;
 }
 
 uli symbol_newtona(unsigned n, unsigned k) {
-	return silnia(n)/(silnia(k)*silnia(n-k));
+	return silnia(n) / (silnia(k) * silnia(n - k));
 }
 
 double dwumian(double a, double b, unsigned n) {
 	unsigned i;
-	double suma=0;
-	for (i=0; i<=n; ++i) {
-		suma += symbol_newtona(n, i) * pow(a, n-i) * pow(b, i);
+	double suma = 0;
+
+	for (i = 0; i <= n; ++i) {
+		suma += symbol_newtona(n, i) * pow(a, n - i) * pow(b, i);
 	}
 	return suma;
 }
 
 int main(int argc, char *argv[]) {
 	unsigned n;
-	double a,b;
+	double a, b;
+
 	printf("Podaj n: ");
 	scanf("%u", &n);
 	printf("Podaj a: ");
