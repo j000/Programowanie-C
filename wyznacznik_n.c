@@ -1,16 +1,35 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>	/* isatty() */
-#include <stdarg.h>	/* varargs */
 #include <string.h>	/* memcpy() */
-
-/* #include <math.c> */
+#include <alloca.h>
+#include <errno.h>
 
 enum {
 	BRAK,
 	JEDNO,
 	WIELE
 };
+
+void *my_malloc(size_t sz) {
+	void *tmp = malloc(sz);
+
+	if (tmp != NULL)
+		return tmp;
+	fprintf(stderr, "Malloc failed (%ld bytes): %s. Aborting.\n", sz,
+		strerror(errno));
+	exit(EXIT_FAILURE);
+}
+
+void *my_calloc(size_t n, size_t sz) {
+	void *tmp = calloc(n, sz);
+
+	if (tmp != NULL)
+		return tmp;
+	fprintf(stderr, "Calloc failed (%ld x %ld bytes): %s. Aborting.\n", n, sz,
+		strerror(errno));
+	exit(EXIT_FAILURE);
+}
 
 #if 0
 double wyznacznik(unsigned size, double a[][size]) {
@@ -20,62 +39,74 @@ double wyznacznik(unsigned size, double a[][size]) {
 double wyznacznik(unsigned size, double a[]) {
 	double det = 0;
 	unsigned i = 0;
-	double *tmp;
+	double *tmp = NULL;
 
 	if (size == 1)
 		return a[0];
 	if (size == 2)
 		/* a[0][0] * a[1][1] - a[1][0] * a[0][1] */
-		/* return a[0 + size * 0] * a[1 + size * 1] - a[1 + size * 0] * a[0 + size * 1]; */
 		return a[0] * a[3] - a[1] * a[2];
 
 	/* metoda Laplace’a */
-	tmp = (double *)malloc((size - 1) * (size - 1) * sizeof(a[0]));
-	if (tmp == NULL)
-		exit(EXIT_FAILURE);
+	tmp = alloca(sizeof(*a) * (size - 1) * (size - 1));
+	for (i = 1; i < size; ++i) {
+		/* kopiuj wiersz a[i] do tmp[i-1]
+		 * (czyli pomiń wiersz 0)
+		 * i pomiń pierwszą kolumnę */
+		memcpy(&tmp[(size - 1) * (i - 1)], &a[size * i + 1],
+			sizeof(*a) * (size - 1));
+	}
 	for (i = 0; i < size; ++i) {
-
-		/* det += a[] */
+		/* kopiuj wiersz a[i-1] do tmp[i-1]
+		 * (zamiast kopiować całą tablicę)
+		 * i pomiń pierwszą kolumnę */
+		if (i > 0)
+			memcpy(&tmp[(size - 1) * (i - 1)], &a[size * (i - 1) + 1],
+				sizeof(*a) * (size - 1));
+		/* licz wyznacznik */
+		det += ((i % 2) ? -1 : 1) * a[i * size] * wyznacznik(size - 1, tmp);
 	}
 	return det;
 }
-
-/* just to skip warning... */
-
-/* #define wyznacznik(x, y) wyznacznik(x, (double*)y) */
 #endif
 
 unsigned uklad(unsigned int size, double a[], double b[], double x[]) {
+	unsigned i;
 	double w[3] = { 0 };
-	double t[2][2];
+	double *t;
 
+	t = alloca(sizeof(*a) * size * size);
 	/* wyznacznik główny */
 	w[0] = wyznacznik(2, a);
 
 	/* wyznacznik 1 */
-	memcpy(t, a, sizeof(t));
-	t[0][0] = b[0];
-	t[1][0] = b[1];
+	memcpy(t, a, sizeof(*t) * size * size);
+	t[0 + size * 0] = b[0];
+	t[1 + size * 0] = b[1];
 	w[1] = wyznacznik(2, (double *)t);
 
 	/* wyznacznik 2 */
-	memcpy(t, a, sizeof(t));
-	t[0][1] = b[0];
-	t[1][1] = b[1];
+	memcpy(t, a, sizeof(*t) * size * size);
+	t[0 + size * 1] = b[0];
+	t[1 + size * 1] = b[1];
 	w[2] = wyznacznik(2, (double *)t);
 
 	/* rozwiazania */
 	if (w[0] == 0) {
-		if (w[1] == 0 && w[2] == 0) {
-			/* nieskończenie wiele rozwiązań */
-			return WIELE;
+		for (i = 1; i <= size; ++i) {
+			/* któryś wyznacznik jest różny od zera
+			 * brak rozwiązań */
+			if (w[i] != 0)
+				return BRAK;
 		}
-		/* brak rozwiązań */
-		return BRAK;
+		/* wszystkie wyznaczniki są równe zero
+		 * nieskończenie wiele rozwiązań */
+		return WIELE;
 	}
 	/* jedno roziązanie */
-	x[0] = w[1] / w[0];
-	x[1] = w[2] / w[0];
+	for (i = 0; i < size; ++i) {
+		x[i] = w[i + 1] / w[0];
+	}
 	return JEDNO;
 }
 
