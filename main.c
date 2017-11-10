@@ -31,6 +31,14 @@ int main(int argc, char **argv) {
 		};
 		assert(18 == wyznacznik(3, (double *)a));
 	}
+	{
+		double a[3][3] = {
+			{3, 1, 1},
+			{2, 2, 3},
+			{1, 3, 2}
+		};
+		assert(-12 == wyznacznik(3, (double *)a));
+	}
 #endif
 	/* return kwadratowe(argc, argv); */
 	return metoda_wyznacznikow(argc, argv);
