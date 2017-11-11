@@ -31,11 +31,6 @@ void *my_calloc(size_t n, size_t sz) {
 	exit(EXIT_FAILURE);
 }
 
-#if 0
-double wyznacznik(unsigned size, double a[][size]) {
-	return a[0][0] * a[1][1] - a[1][0] * a[0][1];
-}
-#else
 double wyznacznik(unsigned size, double a[]) {
 	double det = 0;
 	unsigned i = 0;
@@ -68,7 +63,6 @@ double wyznacznik(unsigned size, double a[]) {
 	}
 	return det;
 }
-#endif
 
 unsigned uklad(unsigned int size, double a[], double b[], double x[]) {
 	unsigned i;
@@ -94,10 +88,8 @@ unsigned uklad(unsigned int size, double a[], double b[], double x[]) {
 	/* rozwiazania */
 	if (w[0] == 0) {
 		for (i = 1; i <= size; ++i) {
-			/* któryś wyznacznik jest różny od zera
-			 * brak rozwiązań */
-			if (w[i] != 0)
-				return BRAK;
+			if (w[i] != 0) /* któryś wyznacznik jest różny od zera */
+				return BRAK; /* brak rozwiązań */
 		}
 		/* wszystkie wyznaczniki są równe zero
 		 * nieskończenie wiele rozwiązań */
@@ -124,6 +116,7 @@ int metoda_wyznacznikow(int argc, char *argv[]) {
 	/* BLACK MAGIC ;) */
 	int (*my_printf) (const char *, ...) = printf;
 
+	/* bez wypisywania */
 	if (!isatty(STDIN_FILENO))
 		my_printf = (int (*)(const char *, ...))noop;
 	/* wczytywanie */
