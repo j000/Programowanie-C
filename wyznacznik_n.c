@@ -5,11 +5,7 @@
 #include <alloca.h>
 #include <errno.h>
 
-enum {
-	BRAK,
-	JEDNO,
-	WIELE
-};
+#include "wyznacznik_n.h"
 
 void *my_malloc(size_t sz) {
 	void *tmp = malloc(sz);
@@ -65,25 +61,27 @@ double wyznacznik(unsigned size, double a[]) {
 }
 
 unsigned uklad(unsigned int size, double a[], double b[], double x[]) {
-	unsigned i;
-	double w[3] = { 0 };
+	unsigned i, j;
+	double *w;
 	double *t;
 
-	t = alloca(sizeof(*a) * size * size);
+	w = alloca(sizeof(*w) * (size + 1));
+	t = alloca(sizeof(*t) * size * size);
+
 	/* wyznacznik główny */
-	w[0] = wyznacznik(2, a);
+	w[0] = wyznacznik(size, a);
 
-	/* wyznacznik 1 */
-	memcpy(t, a, sizeof(*t) * size * size);
-	t[0 + size * 0] = b[0];
-	t[1 + size * 0] = b[1];
-	w[1] = wyznacznik(2, (double *)t);
-
-	/* wyznacznik 2 */
-	memcpy(t, a, sizeof(*t) * size * size);
-	t[0 + size * 1] = b[0];
-	t[1 + size * 1] = b[1];
-	w[2] = wyznacznik(2, (double *)t);
+	/* kolejne wyznaczniki */
+	for (i = 0; i < size; ++i) {
+		/* kopiuj tablicę a[] do t[] */
+		memcpy(t, a, sizeof(*t) * size * size);
+		/* wczytaj b[] na odpowiednią kolumnę t[] */
+		for (j = 0; j < size; ++j) {
+			t[i + size * j] = b[j];
+		}
+		/* wylicz wyznacznik */
+		w[i + 1] = wyznacznik(size, t);
+	}
 
 	/* rozwiazania */
 	if (w[0] == 0) {
@@ -107,10 +105,11 @@ int noop(void) {
 }
 
 int metoda_wyznacznikow(int argc, char *argv[]) {
-	double a[2][2] = { 0 };
-	double b[2] = { 0 };
-	double x[2] = { 0 };
-	int i, j;
+	unsigned size = 2;
+	double *a;
+	double *b;
+	double *x;
+	unsigned i, j;
 	int rozwiazania = BRAK;
 
 	/* BLACK MAGIC ;) */
@@ -119,27 +118,54 @@ int metoda_wyznacznikow(int argc, char *argv[]) {
 	/* bez wypisywania */
 	if (!isatty(STDIN_FILENO))
 		my_printf = (int (*)(const char *, ...))noop;
+	
+	/* rozmiar */
+	if (argc > 1) {
+		unsigned tmp = strtol(argv[1], (char **)NULL, 10);
+		if (tmp > 0)
+			size = tmp;
+	}
+
+	/* pamięć */
+	a = alloca(sizeof(*a) * size * size);
+	b = alloca(sizeof(*b) * size);
+	x = alloca(sizeof(*x) * size);
+
 	/* wczytywanie */
-	my_printf("%s\n%30s\n%30s\n",
-		"Rowniania:", "a11 * x1 + a12 * x2 = b1", "a21 * x1 + a22 * x2 = b2");
-	for (i = 0; i < 2; ++i) {
-		for (j = 0; j < 2; ++j) {
+	my_printf("Rownania:\n");
+	for (i = 1; i <= size; ++i) {
+		my_printf("a%d1 * x1", i);
+		for (j = 2; j <= size; ++j) {
+			my_printf(" + a%d%d * x%d", i, j, j);
+		}
+		my_printf(" = b%d\n", i);
+	}
+	for (i = 0; i < size; ++i) {
+		for (j = 0; j < size; ++j) {
 			my_printf("Podaj a%d%d: ", i + 1, j + 1);
-			scanf("%lf", &a[i][j]);
+			scanf("%lf", &a[i * size + j]);
 		}
 		my_printf("Podaj b%d: ", i + 1);
 		scanf("%lf", &b[i]);
 	}
 	/* pokaż co liczymy */
-	printf("%.3f * x1 + %.3f * x2 = %.3f\n%.3f * x1 + %.3f * x2 = %.3f\n",
-		a[0][0], a[0][1], b[0], a[1][0], a[1][1], b[1]);
+	for (i = 0; i < size; ++i) {
+		printf("%6.2f * x1", a[i * size + 0]);
+		for (j = 1; j < size; ++j) {
+			printf(" + %6.2f * x%d", a[i * size + j], j + 1);
+		}
+		printf(" = %6.2f\n", b[i]);
+	}
 	/* rozwiąż */
-	rozwiazania = uklad(2, (double *)a, b, x);
+	rozwiazania = uklad(size, a, b, x);
 	/* wypisz wynik */
 	if (rozwiazania == WIELE) {
 		printf("Nieskończenie wiele rozwiazań.\n");
 	} else if (rozwiazania == JEDNO) {
-		printf("Jedno rozwiązanie: %.3f i %.3f\n", x[0], x[1]);
+		printf("Jedno rozwiązanie:\n");
+		for (i = 0; i < size; ++i) {
+			printf("x%d = %6.2f\n", i + 1, x[i]);
+		}
 	} else {
 		printf("Brak rozwiązań.\n");
 	}
