@@ -8,6 +8,18 @@
 #include "wyznacznik_n.h"
 int kwadratowe(int, char **);
 
+int menu(void) {
+	int n;
+	printf("\n--------\n");
+	printf("1. Dwumian Newtona\n");
+	printf("2. Równanie kwadratowe\n");
+	printf("3. Układ równań\n");
+	printf("4. Koniec programu\n");
+	printf("\nDokonaj wyboru:\n");
+	scanf("%d", &n);
+	return n;
+}
+
 int main(int argc, char **argv) {
 #ifdef _DEBUG
 	{ /* wyznacznik 3x3 */
@@ -87,6 +99,25 @@ int main(int argc, char **argv) {
 		assert(-1 == x[3]);
 	}
 #endif
+	while (1) {
+		switch(menu()) {
+			case 1:
+				printf("Wybrano dwumian Newtona\n");
+				break;
+			case 2:
+				printf("Wybrano równianie kwadratowe\n");
+				break;
+			case 3:
+				printf("Wybrano układ równań\n");
+				break;
+			case 4:
+				printf("Koniec\n");
+				exit(EXIT_SUCCESS);
+			default:
+				printf("Nie ma takiej opcji\n");
+		}
+	}
+	
 	/* return kwadratowe(argc, argv); */
 	return metoda_wyznacznikow(argc, argv);
 }
