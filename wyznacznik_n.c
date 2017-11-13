@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>	/* isatty() */
 #include <string.h>	/* memcpy() */
 #include <alloca.h>
 #include <errno.h>
 
 #include "wyznacznik_n.h"
+int (*my_printf) (const char *, ...);
 
 void *my_malloc(size_t sz) {
 	void *tmp = malloc(sz);
@@ -100,31 +100,23 @@ unsigned uklad(unsigned int size, double a[], double b[], double x[]) {
 	return JEDNO;
 }
 
-int noop(void) {
-	return 0;
-}
-
-int metoda_wyznacznikow(int argc, char *argv[]) {
-	unsigned size = 2;
+/* int metoda_wyznacznikow(int argc, char *argv[]) { */
+	/* unsigned size = 2; */
+int metoda_wyznacznikow(unsigned size) {
 	double *a;
 	double *b;
 	double *x;
 	unsigned i, j;
 	int rozwiazania = BRAK;
 
-	/* BLACK MAGIC ;) */
-	int (*my_printf) (const char *, ...) = printf;
-
-	/* bez wypisywania */
-	if (!isatty(STDIN_FILENO))
-		my_printf = (int (*)(const char *, ...))noop;
-	
 	/* rozmiar */
+	/*
 	if (argc > 1) {
 		unsigned tmp = strtol(argv[1], (char **)NULL, 10);
 		if (tmp > 0)
 			size = tmp;
 	}
+	*/
 
 	/* pamięć */
 	a = alloca(sizeof(*a) * size * size);
