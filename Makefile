@@ -48,7 +48,7 @@ CFLAGS += $(shell pkg-config --cflags-only-I icu-uc icu-io)
 CXXFLAGS += $(shell pkg-config --cflags-only-I icu-uc icu-io)
 LDFLAGS += $(shell pkg-config --libs-only-l --libs-only-L icu-uc icu-io)
 
-SRC ?= main.c
+SRC ?= main.c rkw.c wyznacznik_n.c
 EXE := $(basename $(firstword $(SRC)))
 SRCDIR ?= .
 OBJDIR ?= .objdir

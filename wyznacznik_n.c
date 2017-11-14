@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>	/* memcpy() */
+#include <string.h>			 /* memcpy() */
 #include <alloca.h>
 #include <errno.h>
 
@@ -40,10 +40,11 @@ double wyznacznik(unsigned size, double a[]) {
 
 	/* metoda Laplace’a */
 	tmp = alloca(sizeof(*a) * (size - 1) * (size - 1));
+	/* kopiuj tablicę a do tmp
+	 * z pominięciem
+	 * pierszego wiersza
+	 * i pierszej kolumny */
 	for (i = 1; i < size; ++i) {
-		/* kopiuj wiersz a[i] do tmp[i-1]
-		 * (czyli pomiń wiersz 0)
-		 * i pomiń pierwszą kolumnę */
 		memcpy(&tmp[(size - 1) * (i - 1)], &a[size * i + 1],
 			sizeof(*a) * (size - 1));
 	}
@@ -86,7 +87,7 @@ unsigned uklad(unsigned int size, double a[], double b[], double x[]) {
 	/* rozwiazania */
 	if (w[0] == 0) {
 		for (i = 1; i <= size; ++i) {
-			if (w[i] != 0) /* któryś wyznacznik jest różny od zera */
+			if (w[i] != 0)	 /* któryś wyznacznik jest różny od zera */
 				return BRAK; /* brak rozwiązań */
 		}
 		/* wszystkie wyznaczniki są równe zero

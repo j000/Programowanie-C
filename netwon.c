@@ -9,8 +9,8 @@ typedef unsigned long int uli;
 uli silnia(unsigned);
 
 /**
-  * liczy symbol newtona
-  */
+ * liczy symbol newtona
+ */
 uli symbol_newtona(unsigned, unsigned);
 
 uli silnia(unsigned n) {

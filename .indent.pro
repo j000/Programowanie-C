@@ -11,7 +11,7 @@
 --declaration-indentation0
 --declaration-comment-column0
 --else-endif-column0
---comment-indentation0
+--comment-indentation30
 --parameter-indentation0
 --preserve-mtime
 
