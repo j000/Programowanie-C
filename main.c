@@ -10,27 +10,27 @@
 /* int kwadratowe(int, char **); */
 void kwadratowe(void);
 
+/* BLACK MAGIC ;) */
+int (*my_printf) (const char *, ...) = printf;
+
 int menu(void) {
 	int n;
 
-	printf("\n--------\n");
-	printf("1. Dwumian Newtona\n");
-	printf("2. Równanie kwadratowe\n");
-	printf("3. Układ 2 równań\n");
-	printf("4. Układ n równań\n");
-	printf("5. Koniec programu\n");
-	printf("\nDokonaj wyboru:\n");
+	my_printf("\n--------\n");
+	my_printf("1. Dwumian Newtona\n");
+	my_printf("2. Równanie kwadratowe\n");
+	my_printf("3. Układ 2 równań\n");
+	my_printf("4. Układ n równań\n");
+	my_printf("5. Koniec programu\n");
+	my_printf("\nDokonaj wyboru:\n");
 	scanf("%d", &n);
-	printf("\n--------\n");
+	my_printf("\n--------\n");
 	return n;
 }
 
 int noop(void) {
 	return 0;
 }
-
-/* BLACK MAGIC ;) */
-int (*my_printf) (const char *, ...) = printf;
 
 int main(int argc, char **argv) {
 	/* bez wypisywania */
@@ -120,31 +120,31 @@ int main(int argc, char **argv) {
 	while (1) {
 		switch (menu()) {
 		case 1:
-			printf("Wybrano dwumian Newtona\n");
+			my_printf("Wybrano dwumian Newtona\n");
 			break;
 		case 2:
-			printf("Wybrano równianie kwadratowe\n");
+			my_printf("Wybrano równianie kwadratowe\n");
 			kwadratowe();
 			break;
 		case 3:
-			printf("Wybrano układ 2 równań\n");
+			my_printf("Wybrano układ 2 równań\n");
 			metoda_wyznacznikow(2);
 			break;
 		case 4:
-			printf("Wybrano układ n równań\n");
+			my_printf("Wybrano układ n równań\n");
 			{
 				int n = 0;
 
-				printf("Podaj n: ");
+				my_printf("Podaj n: ");
 				scanf("%d", &n);
 				metoda_wyznacznikow(n);
 			}
 			break;
 		case 5:
-			printf("Koniec\n");
+			my_printf("Koniec\n");
 			exit(EXIT_SUCCESS);
 		default:
-			printf("Nie ma takiej opcji\n");
+			my_printf("Nie ma takiej opcji\n");
 		}
 	}
 
