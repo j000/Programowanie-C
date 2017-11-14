@@ -48,6 +48,9 @@ CFLAGS += $(shell pkg-config --cflags-only-I icu-uc icu-io)
 CXXFLAGS += $(shell pkg-config --cflags-only-I icu-uc icu-io)
 LDFLAGS += $(shell pkg-config --libs-only-l --libs-only-L icu-uc icu-io)
 
+COLOR = echo -en '\e[1;34m'
+RESET = echo -en '\e[0m'
+
 SRC ?= main.c rkw.c wyznacznik_n.c
 EXE := $(basename $(firstword $(SRC)))
 SRCDIR ?= .
@@ -84,24 +87,34 @@ debug: $(EXE) ## build with debug enabled
 debugrun: debug run ## run debug version
 
 $(EXE): $(OBJ)
+	$(COLOR)
 	echo "Link $^ -> $@"
+	$(RESET)
 	$(CC) $(LDFLAGS) -o $@ $(OBJ)
 
 $(OBJDIR)/%.c.o: $(DEPDIR)/%.c.d
+	@$(COLOR)
 	echo "Compile $(SRCDIR)/$*.c -> $(OBJDIR)/$*.c.o"
+	@$(RESET)
 	$(CC) $(CFLAGS) -c -o $@ $*.c
 
 $(OBJDIR)/%.cpp.o: $(DEPDIR)/%.cpp.d
+	@$(COLOR)
 	echo "Compile $(SRCDIR)/$*.cpp -> $(OBJDIR)/$*.cpp.o"
+	@$(RESET)
 	$(CXX) $(CXXFLAGS) -c -o $@ $*.cpp
 
 $(DEPDIR)/%.c.d: $(SRCDIR)/%.c
+	@$(COLOR)
 	echo "Dependencies $(SRCDIR)/$*.c -> $(DEPDIR)/$*.c.d"
+	@$(RESET)
 	$(CC) $(DEPFLAGS) -MM -MT '$$(OBJDIR)/$*.c.o' -MF $@ $<
 	sed -i 's,^\([^:]\+.o\):,\1 $$(DEPDIR)/$*.c.d:,' $@
 
 $(DEPDIR)/%.cpp.d: $(SRCDIR)/%.cpp
+	@$(COLOR)
 	echo "Dependencies $(SRCDIR)/$*.cpp -> $(DEPDIR)/$*.cpp.d"
+	@$(RESET)
 	$(CXX) $(DEPFLAGS) -MM -MT '$$(OBJDIR)/$*.cpp.o' -MF $@ $<
 	sed -i 's,^\([^:]\+.o\):,\1 $$(DEPDIR)/$*.c.d:,' $@
 
@@ -129,7 +142,9 @@ clean: mostlyclean ## delete everything this Makefile created
 
 .PHONY: mostlyclean
 mostlyclean: ## delete everything created, leave executable
+	@$(COLOR)
 	echo "Cleaning"
+	@$(RESET)
 ifneq ($(wildcard $(OBJDIR)),)
 	-$(RM) $(OBJ)
 	-$(RM) $(OBJDIR)/.keepme
@@ -143,7 +158,9 @@ endif
 
 .PHONY: forceclean
 forceclean: ## force delete all created temporary folders
+	@$(COLOR)
 	echo "Force cleaning"
+	@$(RESET)
 ifneq ($(wildcard $(OBJDIR)),)
 	-$(RM) -r $(OBJDIR)
 endif
