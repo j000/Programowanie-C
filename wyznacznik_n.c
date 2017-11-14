@@ -1,9 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>			 /* memcpy() */
-#include <alloca.h>
-#include <errno.h>
-
 #include "wyznacznik_n.h"
 int (*my_printf) (const char *, ...);
 
