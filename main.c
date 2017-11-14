@@ -7,7 +7,8 @@
 #endif
 
 #include "wyznacznik_n.h"
-int kwadratowe(int, char **);
+/* int kwadratowe(int, char **); */
+void kwadratowe(void);
 
 int menu(void) {
 	int n;
@@ -121,6 +122,7 @@ int main(int argc, char **argv) {
 				break;
 			case 2:
 				printf("Wybrano równianie kwadratowe\n");
+				kwadratowe();
 				break;
 			case 3:
 				printf("Wybrano układ 2 równań\n");

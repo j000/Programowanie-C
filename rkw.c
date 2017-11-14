@@ -20,7 +20,8 @@ int rownanieKwadratowe(double a, double b, double c, double *x1, double *x2) {
 	return 2;
 }
 
-int kwadratowe(int argc, char *argv[]) {
+/* int kwadratowe(int argc, char *argv[]) { */
+void kwadratowe(void) {
 	double a, b, c, x1, x2;
 	int n;
 
@@ -42,7 +43,7 @@ int kwadratowe(int argc, char *argv[]) {
 	} else {
 		printf("%.2f i %.2f\n", x1, x2);
 	}
-	return EXIT_SUCCESS;
+	/* return EXIT_SUCCESS; */
 }
 
 /* vim: tabstop=4 shiftwidth=0 noexpandtab
