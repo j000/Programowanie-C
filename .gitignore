@@ -1,3 +1,17 @@
+# ignore extension-less files (leave as first)
+# ignore all
+*
+# unignore directories
+!/**/
+# unignore files with extensions
+!*.*
+
+# ignore build dirs
 .depdir
 .objdir
+
+# ignore backups
 *~
+
+# ignore vim files
+*.swp
