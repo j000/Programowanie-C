@@ -23,7 +23,8 @@ int menu(void) {
 	my_printf("4. Układ n równań\n");
 	my_printf("5. Koniec programu\n");
 	my_printf("\nDokonaj wyboru:\n");
-	scanf("%d", &n);
+	if (scanf("%d", &n) == EOF)
+		return EOF;
 	my_printf("\n--------\n");
 	return n;
 }
@@ -141,6 +142,7 @@ int main(int argc, char **argv) {
 			}
 			break;
 		case 5:
+		case EOF:
 			my_printf("Koniec\n");
 			exit(EXIT_SUCCESS);
 		default:
